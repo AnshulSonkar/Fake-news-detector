@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake News Detector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🧠 AI Fake News Detector</h1>
+
+    <textarea id="newsText" placeholder="Paste news here..."></textarea>
+    
+    <button onclick="checkNews()">Check News</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+async function checkNews() {
+    const text = document.getElementById("newsText").value;
+
+    const response = await fetch("/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text: text })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("result").innerHTML = `
+        <h2>Prediction: ${data.label}</h2>
+        <p>Confidence: ${data.confidence}%</p>
+        <h3>Explanation:</h3>
+        <p>${data.explanation}</p>
+        <p style="color:red;">⚠️ This is AI-based and may not be 100% accurate</p>
+    `;
+}
+</script>
+
+</body>
+</html>
